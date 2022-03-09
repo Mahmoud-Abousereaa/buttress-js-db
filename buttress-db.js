@@ -54,6 +54,75 @@ class ButtressInterface {
   }
 
   /**
+   * Load core app users
+   * @param  {endpoint} string
+   * @param  {token} string
+   * @return {Promise}
+   */
+  _getCoreUsers(endpoint, token) {
+    endpoint = endpoint + 'user';
+    return this._coreRequest(endpoint, token);
+  }
+
+  /**
+   * Load core app attributes
+   * @param  {endpoint} string
+   * @param  {token} string
+   * @return {Promise}
+   */
+  _getCoreAttributes(endpoint, token) {
+    endpoint = endpoint + 'attributes';
+    return this._coreRequest(endpoint, token);
+  }
+
+  /**
+   * Send a request to fetch core app schemas
+   * @param  {endpoint} string
+   * @param  {token} string
+   * @return {Promise}
+   */
+  _coreRequest(endpoint, token) {
+    return fetch(`${endpoint}?urq=${Date.now()}&token=${token}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        // Handle Buttress Error
+        throw new Error(`DS ERROR [CORE SCHEMAS] ${response.status} ${endpoint} - ${response.statusText}`);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
+
+  /**
+   * Load core app schemas
+   * @param  {host} string
+   * @param  {token} string
+   * @param  {apiPath} string
+   * @return {Promise}
+   */
+  loadCoreSchemas(host, token, apiPath) {
+    console.log(`get rq: core schemas request for app api path ${apiPath}`);
+    const endpoint = `${host}/api/v1/`;
+    const coreSchemas = {};
+    return this._getCoreUsers(endpoint, token)
+      .then((users) => coreSchemas.users = users)
+      .then(() => this._getCoreAttributes(endpoint, token))
+      .then((attributes) => {
+        coreSchemas.attributes = attributes;
+        return coreSchemas;
+      })
+  }
+
+  /**
    * @param {string} collection
    * @param {string} id
    * @return {promise} entity
