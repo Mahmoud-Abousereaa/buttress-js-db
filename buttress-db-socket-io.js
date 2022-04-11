@@ -41,7 +41,8 @@ export class ButtressDbSocketIo extends PolymerElement {
         type: Array,
         value: function() {
           return [
-            'db-activity'
+            'db-activity',
+            'db-disconnect-room'
           ];
         }
       },
