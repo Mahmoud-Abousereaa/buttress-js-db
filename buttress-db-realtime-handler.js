@@ -68,9 +68,7 @@ export class ButtressDbRealtimeHandler extends PolymerElement {
     if (this.get('logging')) console.log('silly', '__handleRxEvent', ev.detail);
 
     if (type === 'db-disconnect-room') {
-      if (roomType === 'generic') {
-        this.__clearAccessControlLoadedData();
-      }
+      this.__clearAccessControlLoadedData(roomType);
       return;
     }
 
@@ -114,8 +112,15 @@ export class ButtressDbRealtimeHandler extends PolymerElement {
     this.set('lastSequence', sequence);
   }
 
-  __clearAccessControlLoadedData() {
+  __clearAccessControlLoadedData(collections) {
     const db = this.get('db');
+    if (Array.isArray(collections)) {
+      collections.forEach((collection) => {
+        this.set(`db.${collection}.data`, []);
+      });
+      return;
+    }
+
     Object.keys(db).forEach((key) => {
       if (key === 'Factory') return;
       if (key === 'people' || key === 'attributes' || key === 'switch') return;
