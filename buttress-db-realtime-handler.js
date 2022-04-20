@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 
+import {Buttress} from './buttress-db';
 import './buttress-db-socket-io.js';
 
 export class ButtressDbRealtimeHandler extends PolymerElement {
@@ -117,6 +118,7 @@ export class ButtressDbRealtimeHandler extends PolymerElement {
     if (Array.isArray(collections)) {
       collections.forEach((collection) => {
         this.set(`db.${collection}.data`, []);
+        Buttress.clearSearchLoadedCollection(collection);
       });
       return;
     }
@@ -125,6 +127,7 @@ export class ButtressDbRealtimeHandler extends PolymerElement {
       if (key === 'Factory') return;
       if (key === 'people' || key === 'attributes' || key === 'switch') return;
 
+      Buttress.clearSearchLoadedCollection(key);
       this.set(`db.${key}.data`, []);
     });
   }

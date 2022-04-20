@@ -138,6 +138,10 @@ class ButtressInterface {
 
     return hash;
   }
+
+  clearSearchLoadedCollection(collection) {
+    this._searchLoadedCollection[collection] = false;
+  }
 }
 export const Buttress = new ButtressInterface();
 

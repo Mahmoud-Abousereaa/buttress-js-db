@@ -287,7 +287,7 @@ export default class ButtressDbDataService extends PolymerElement {
   getEntity(id) {
     return this.__generateGetRequest(id);
   }
-  getAllEntities(id) {
+  getAllEntities() {
     return this.__generateListRequest();
   }
   search(query, limit = 0, skip = 0, sort, project=null) {
@@ -465,6 +465,11 @@ export default class ButtressDbDataService extends PolymerElement {
           return response.json();
         } else {
           // Handle Buttress Error
+          if (response.status === 401) {
+            this.status = 'done';
+            Buttress.clearSearchLoadedCollection(this.id);
+          }
+
           throw new Error(`DS ERROR [${rq.type}] ${response.status} ${rq.url} - ${response.statusText}`);
         }
       })
